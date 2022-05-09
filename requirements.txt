@@ -2,3 +2,4 @@ torch>=0.4.1
 torchvision
 tensorboardX
 pillow
+matplotlib==3.5.2
