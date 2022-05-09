@@ -1,3 +1,6 @@
 *.pyc
 *.pth
 __pycache__/
+
+env/
+logdir/
