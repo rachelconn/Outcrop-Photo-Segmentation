@@ -64,9 +64,7 @@ class Session:
         # Convert labels to RGB
         colors = cm.get_cmap('hsv', settings.N_CLASSES)
         color_map = colors(np.linspace(0, 1, settings.N_CLASSES))
-        print(color_map.shape)
         color_map = np.vstack((color_map, [0., 0., 0., 1.])) # For 255 labels
-        print(color_map.shape)
         def convert_to_image(labels):
             labels[labels == 255] = 21
             output = color_map[labels.flatten()]
