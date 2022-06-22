@@ -15,7 +15,7 @@ from network import EMANet
 import settings
 
 import matplotlib.pyplot as plt
-from matplotlib import cm
+from matplotlib import cm, colors
 
 logger = settings.logger
 
@@ -54,25 +54,28 @@ class Session:
 
         pred = logit.max(dim=1)[1]
 
+        def batch_to_example(tensor):
+            return np.squeeze(tensor.cpu().numpy(), axis=0)
+
         # Plot image
-        def to_channels_last(tensor):
-            return np.moveaxis(tensor.cpu()[0].numpy(), 0, -1)
         ax1 = plt.subplot(1, 3, 1)
         ax1.set_title('Image')
-        ax1.imshow(to_channels_last(image) / 2.64)
+        image_to_display = np.transpose(batch_to_example(image), (1, 2, 0)) / 2.64
+        ax1.imshow(image_to_display)
 
         # Convert labels to RGB
-        colors = cm.get_cmap('hsv', settings.N_CLASSES)
-        color_map = colors(np.linspace(0, 1, settings.N_CLASSES))
+        color_map = cm.get_cmap('hsv', settings.N_CLASSES)(np.linspace(0, 1, settings.N_CLASSES))
         color_map = np.vstack((color_map, [0., 0., 0., 1.])) # For 255 labels
-        def convert_to_image(labels):
-            labels[labels == 255] = 21
+
+        def label_to_image(labels):
+            labels = batch_to_example(labels)
+            labels[labels == 255] = settings.N_CLASSES
             output = color_map[labels.flatten()]
             r, c = labels.shape[:2]
-            return np.moveaxis(output.reshape((r, c, -1)), 0, 1)
+            return np.reshape(output, (r, c, 4))
 
-        label_image = convert_to_image(to_channels_last(label))
-        pred_image = convert_to_image(to_channels_last(pred))
+        label_image = label_to_image(label)
+        pred_image = label_to_image(pred)
 
         # Plot ground truth labels
         ax2 = plt.subplot(1, 3, 2)

@@ -286,8 +286,11 @@ class EMANet(nn.Module):
         self.fc2 = nn.Conv2d(256, n_classes, 1)
 
         # Put the criterion inside the model to make GPU load balanced
-        self.crit = CrossEntropyLoss2d(ignore_index=settings.IGNORE_LABEL, 
-                                       reduction='none')
+        self.crit = CrossEntropyLoss2d(
+            weight=settings.CLASS_WEIGHTS,
+            ignore_index=settings.IGNORE_LABEL,
+            reduction='none'
+        )
 
     def forward(self, img, lbl=None, size=None):
         x = self.extractor(img)

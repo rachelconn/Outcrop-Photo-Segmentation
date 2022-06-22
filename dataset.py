@@ -1,7 +1,7 @@
 import os
 import os.path as osp
 
-from PIL import Image
+from PIL import Image, ImageOps
 import numpy as np
 import scipy.io as sio
 
@@ -13,17 +13,17 @@ import settings
 
 
 def fetch(image_path, label_path=None):
-    with open(image_path, 'rb') as fp:
-        image = Image.open(fp).convert('RGB')
-    image = torch.FloatTensor(np.asarray(image)) / 255
-    image = (image - settings.MEAN) / settings.STD
-    image = image.permute(2, 0, 1).unsqueeze(dim=0)
+    with Image.open(image_path).convert('RGB') as image:
+        image = ImageOps.exif_transpose(image)
+        image = torch.FloatTensor(np.asarray(image)) / 255
+        # TODO: use dataset mean/stdev rather than calculating per image
+        image = (image - settings.MEAN) / settings.STD
+        image = image.permute(2, 0, 1).unsqueeze(dim=0)
 
     if label_path is not None:
-        with open(label_path, 'rb') as fp:
-            label = Image.open(fp).convert('P')
-        label = torch.FloatTensor(np.asarray(label))
-        label = label.unsqueeze(dim=0).unsqueeze(dim=1)
+        with Image.open(label_path).convert('P') as label:
+            label = torch.FloatTensor(np.asarray(label))
+            label = label.unsqueeze(dim=0).unsqueeze(dim=1)
     else:
         label = None
 
