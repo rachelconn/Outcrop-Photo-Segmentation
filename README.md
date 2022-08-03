@@ -27,5 +27,5 @@ Steps are adapted from EMANet, but updated to be more descriptive and support th
 1. Download the dataset (note: this dataset is currently private, so no links are provided).
 2. Change the following settings in `settings.py`:
   - `DATA_ROOT` to the location where you placed the dataset
-  - `N_CLASSES` to 13
+  - `N_CLASSES` to 6
 3. Swap the files located in the `datalist` folder with the ones in the `outcrop` folder to fetch the correct files when training and testing.
