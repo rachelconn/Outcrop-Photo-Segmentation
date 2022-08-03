@@ -8,6 +8,7 @@ import scipy.io as sio
 import torch
 from torch.nn import functional as F
 from torch.utils import data
+from torchvision import transforms
 
 import settings
 
@@ -84,6 +85,23 @@ def flip(image, label=None):
             label = torch.flip(label, [3])
     return image, label
 
+def adjust_brightness(image, label=None):
+    brightness = np.random.uniform(0.7, 1.2)
+    contrast = np.random.uniform(0.8, 1.2)
+    image = transforms.functional.adjust_brightness(image, brightness)
+    image = transforms.functional.adjust_contrast(image, contrast)
+    return image, label
+
+def sharpen(image, label=None):
+    sharpness = np.random.uniform(0.5, 1.5)
+    image = transforms.functional.adjust_sharpness(image, sharpness)
+    return image, label
+
+def rotate(image, label=None):
+    angle = np.random.uniform(-20, 20)
+    image = transforms.functional.rotate(image, angle)
+    label = transforms.functional.rotate(label, angle, fill=255)
+    return image, label
 
 class BaseDataset(data.Dataset):
     def __init__(self, data_root, split):
@@ -119,6 +137,9 @@ class TrainDataset(BaseDataset):
         image, label = pad(image, label)
         image, label = crop(image, label)
         image, label = flip(image, label)
+        image, label = adjust_brightness(image, label)
+        image, label = sharpen(image, label)
+        image, label = rotate(image, label)
 
         return image[0], label[0, 0].long()
  
