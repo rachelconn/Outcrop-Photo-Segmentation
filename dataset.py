@@ -103,6 +103,18 @@ def rotate(image, label=None):
     label = transforms.functional.rotate(label, angle, fill=255)
     return image, label
 
+def labels_for_model_type(image, label):
+    """
+    Transforms labels to accomodate the model type:
+    boolean for isgeological, nongeological masked for structuretype
+    """
+    if settings.MODEL_TYPE == 'isgeological':
+        label[label < 5] = 1
+        label[label == 5] = 0
+    elif settings.MODEL_TYPE == 'structuretype':
+        label[label == 5] = 255
+    return image, label
+
 class BaseDataset(data.Dataset):
     def __init__(self, data_root, split):
         self.data_root = data_root
@@ -140,6 +152,7 @@ class TrainDataset(BaseDataset):
         image, label = adjust_brightness(image, label)
         image, label = sharpen(image, label)
         image, label = rotate(image, label)
+        image, label = labels_for_model_type(image, label)
 
         return image[0], label[0, 0].long()
  
@@ -155,6 +168,7 @@ class ValDataset(BaseDataset):
 
         image, label = fetch(image_path, label_path)
         image, label = pad_inf(image, label)
+        image, label = labels_for_model_type(image, label)
         return image[0], label[0, 0].long()
 
 

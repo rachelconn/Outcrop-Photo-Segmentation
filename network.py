@@ -286,8 +286,9 @@ class EMANet(nn.Module):
         self.fc2 = nn.Conv2d(256, n_classes, 1)
 
         # Put the criterion inside the model to make GPU load balanced
+        weight = settings.CLASS_WEIGHTS if n_classes == settings.CLASS_WEIGHTS.size(dim=0) else torch.Tensor(np.ones(n_classes))
         self.crit = CrossEntropyLoss2d(
-            weight=settings.CLASS_WEIGHTS,
+            weight=weight,
             ignore_index=settings.IGNORE_LABEL,
             reduction='none'
         )
