@@ -17,7 +17,6 @@ def main():
     # Count occurrences of each label
     total_occs = np.zeros(settings.N_CLASSES + 1)
     image_counts = np.zeros(settings.N_CLASSES + 1)
-    total_labels = 0
     num_images = 0
     channel_means = np.zeros(3)
     channel_stdevs = np.zeros(3)
@@ -38,12 +37,12 @@ def main():
 
         # Update stats
         total_occs += occs
-        total_labels += label.size
         num_images += 1
         image_counts += np.where(occs > 0, 1, 0)
 
     channel_means /= num_images
     sorted_occs = sorted((occs, i) for i, occs in enumerate(total_occs))
+    total_labels = np.sum(total_occs[:-1])
 
     # Print stats
     for occs, i in sorted_occs:
@@ -54,7 +53,7 @@ def main():
     print(f'Dataset stdev values per channel: {channel_stdevs / 255}')
 
     # Calculate class weights to balance dataset
-    print(f'Balanced class weights: {np.sqrt(total_labels / (settings.N_CLASSES * total_occs))}')
+    print(f'Balanced class weights: {total_labels / (settings.N_CLASSES * total_occs)}')
 
 if __name__ == '__main__':
     main()
