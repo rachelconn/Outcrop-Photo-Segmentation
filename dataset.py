@@ -123,6 +123,7 @@ class BaseDataset(data.Dataset):
         file_list = tuple(open(file_list, 'r'))
         file_list = [id_.rstrip() for id_ in file_list]
         self.files = file_list
+        self.image_files = os.listdir(osp.join(self.data_root, 'JPEGImages'))
 
     def __len__(self):
         return len(self.files)
@@ -140,7 +141,8 @@ class TrainDataset(BaseDataset):
         super(TrainDataset, self).__init__(data_root, split)
 
     def _get_item(self, image_id):
-        image_path = osp.join(self.data_root, 'JPEGImages', image_id + '.jpg')
+        image_name = [name for name in self.image_files if name.startswith(f'{image_id}.')][0]
+        image_path = osp.join(self.data_root, 'JPEGImages', image_name)
         label_path = osp.join(self.data_root, 'SegmentationClassAug', 
                               image_id + '.png')
 
@@ -162,7 +164,8 @@ class ValDataset(BaseDataset):
         super(ValDataset, self).__init__(data_root, split)
 
     def _get_item(self, image_id):
-        image_path = osp.join(self.data_root, 'JPEGImages', image_id + '.jpg')
+        image_name = [name for name in self.image_files if name.startswith(f'{image_id}.')][0]
+        image_path = osp.join(self.data_root, 'JPEGImages', image_name)
         label_path = osp.join(self.data_root, 'SegmentationClassAug', 
                               image_id + '.png')
 
