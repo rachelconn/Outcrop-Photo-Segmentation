@@ -15,6 +15,9 @@ SCALES = (0.5, 0.6, 0.75, 1.0, 1.25, 1.5)
 CROP_SIZE = 513
 IGNORE_LABEL = 255
 
+# Eval settings
+SHOW_EVAL = True
+
 # Model definition
 VALID_MODEL_TYPES = ['isgeological', 'structuretype']
 MODEL_TYPE = 'structuretype'
@@ -29,7 +32,7 @@ STAGE_NUM = 3
 # Training settings
 BATCH_SIZE = 1
 ITER_MAX = 100000
-ITER_SAVE = 2000
+ITER_SAVE = 500
 
 LR_DECAY = 10
 LR = 9e-3
@@ -48,11 +51,19 @@ MODEL_TYPE_N_CLASSES = {
 N_CLASSES = MODEL_TYPE_N_CLASSES[MODEL_TYPE]
 
 if MODEL_TYPE == 'isgeological':
+    # Old
     # CLASS_WEIGHTS = Tensor(np.array([1.89149931, 0.83934196]))
+    # New
+    # CLASS_WEIGHTS = Tensor(np.array([3.175, 0.5935]))
+    # Synthetic
     CLASS_WEIGHTS = Tensor(np.array([1.5149931, 1]))
+    # CLASS_WEIGHTS = Tensor(np.ones(N_CLASSES))
 else:
-    # CLASS_WEIGHTS = Tensor(np.array([1.58730677, 0.42480622, 1.21652997, 1.13550899, 3.19167557]))
-    CLASS_WEIGHTS = Tensor(np.array([1.5, 0.6, 1.21652997, 1.13550899, 2]))
+    # Real
+    # CLASS_WEIGHTS = Tensor(np.array([1, 0.42956536, 1.22508995, 1, 2]))
+    # Synthetic
+    CLASS_WEIGHTS = Tensor(np.array([0.8, 0.6, 1, 1, 2]))
+    # CLASS_WEIGHTS = Tensor(np.array([1.5, 0.6, 1.21652997, 1.13550899, 2]))
     # CLASS_WEIGHTS = Tensor(np.ones(N_CLASSES))
 
 LOG_DIR = './logdir'
