@@ -166,7 +166,8 @@ def main(ckp_name='latest.pth'):
 
         loss = sess.train_batch(image, label)
         out = {'loss': loss}
-        sess.write(out)
+        if sess.step % 100 == 0 or sess.step < 100:
+            sess.write(out)
 
         if sess.step % settings.ITER_SAVE == 0:
             sess.save_checkpoints('step_%d.pth' % sess.step)

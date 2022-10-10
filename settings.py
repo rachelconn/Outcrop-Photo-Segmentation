@@ -23,15 +23,15 @@ VALID_MODEL_TYPES = ['isgeological', 'structuretype']
 MODEL_TYPE = 'structuretype'
 MODEL_DIR = './models/structuretype'
 
-N_LAYERS = 101
+N_LAYERS = 50
 STRIDE = 8
 BN_MOM = 3e-4
 EM_MOM = 0.9
 STAGE_NUM = 3
 
 # Training settings
-BATCH_SIZE = 1
-ITER_MAX = 100000
+BATCH_SIZE = 2
+ITER_MAX = 20_000
 ITER_SAVE = 500
 
 LR_DECAY = 10
@@ -62,7 +62,7 @@ else:
     # Real
     # CLASS_WEIGHTS = Tensor(np.array([1, 0.42956536, 1.22508995, 1, 2]))
     # Synthetic
-    CLASS_WEIGHTS = Tensor(np.array([0.8, 0.6, 1, 1, 2]))
+    CLASS_WEIGHTS = Tensor(np.array([0.8, 0.6, 1.2, 1, 2.2]))
     # CLASS_WEIGHTS = Tensor(np.array([1.5, 0.6, 1.21652997, 1.13550899, 2]))
     # CLASS_WEIGHTS = Tensor(np.ones(N_CLASSES))
 

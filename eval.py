@@ -123,6 +123,8 @@ def main(ckp_name='final.pth'):
             for k, v in scores.items():
                 logger.info('%s-%f' % (k, v))
 
+    print('-' * 80)
+    print('Summary statistics:')
     scores, cls_iu = cal_scores(sess.hist.cpu().numpy())
     for k, v in scores.items():
         logger.info('%s-%f' % (k, v))
